@@ -1,0 +1,164 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: #ebdfdf;
+  font-family: "Poppins";
+  min-height: 100vh;
+}
+
+.intro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative;
+  top: 2rem;
+  transition: padding-top 0.5s ease, padding-bottom 0.5s ease, top 0.5s ease;
+}
+
+.intro-container.submitted {
+  padding-top: 0;
+  padding-bottom: 0;
+  top: 0rem;
+}
+
+.intro-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #dc4848;
+  padding-bottom: 2rem;
+}
+
+.intro-heading.submitted {
+  display: none;
+}
+
+.intro-heading-2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #dc4848;
+  padding-bottom: 1rem;
+}
+
+/* Form container */
+.intro-form-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  padding-left: 40px;
+  padding-top: 3rem;
+}
+
+.intro-form-text {
+  font-family: "Poppins";
+  width: 50rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  max-width: 500px;
+  border-radius: 2.5rem;
+  padding: 1rem;
+  border: 1px solid #dc4848;
+}
+
+.intro-form-submit {
+  position: relative;
+  right: 2.4rem;
+  background-color: #dc4848;
+  color: white;
+  border: none;
+  border-radius: 2.5rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: .5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.search-arrow {
+  color: white;
+}
+
+.intro-form-submit:hover {
+  background-color: #f2a9a9;
+  transform: scale(1.1); /* Button enlarges slightly on hover */
+}
+
+.intro-form-submit:active {
+  background-color: #d23535; /* Slightly darker red on click */
+}
+
+
+/* Small screen responsiveness */
+@media screen and (max-width: 768px) {
+  .App {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background-color: #ebdfdf;
+    font-family: "Poppins";
+    padding: 0.5rem;
+    min-height: 100vh;
+  }
+  .intro-heading-2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #dc4848;
+    padding-bottom: 0.25rem;
+    padding-top: 0.5rem;
+    padding-left: 1rem;
+  }
+
+  .intro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding-top: 2rem;
+    position: relative;
+    top: 2rem;
+    transition: padding-top 0.5s ease, padding-bottom 0.5s ease, top 0.5s ease;
+  }
+
+  .intro-heading {
+    font-size: 1.5rem;
+  }
+
+  .intro-form-input {
+    gap: 0.5rem;
+    width: 90%;
+  }
+
+  .intro-form-text {
+    width: 100%;
+    font-size: 0.75rem
+  }
+}

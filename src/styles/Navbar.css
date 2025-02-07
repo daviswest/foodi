@@ -1,0 +1,235 @@
+.navbar {
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  border: none;
+  background-color: #dc4848;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: #dc4848 0px 2px 5px 0px;
+}
+
+.horizontal-elements {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.location-button {
+  font-family: "Poppins";
+  color: white;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.location-container {
+  line-height: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  padding: 3rem 3rem;
+}
+
+.location-button :hover, .location-text :hover{
+  color: #9f3232;
+  cursor: pointer;
+}
+
+.navigation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #333;
+  border-radius: 1rem;
+  padding: 1rem;
+
+  background-color: white;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  z-index: 1;
+}
+
+.menu-close {
+    align-self: flex-end;
+    height: 30px;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    background-color: transparent;
+    color: white;
+}
+
+.menu-close:hover {
+  cursor: pointer;
+}
+
+.menu-toggler {
+  align-self: flex-end;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  background-color: transparent;
+  color: white;
+}
+
+.menu-toggler:hover {
+  cursor: pointer;
+}
+
+.logo {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.logo-navbar {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  color: white;
+}
+
+.logo-navbar:hover {
+  cursor: pointer;
+  color: #9f3232;
+}
+
+.logo-dark {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #dc4848;
+}
+.navigation-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 3rem;
+  width: 5rem;
+  height: 3rem;
+}
+
+.navigation-list-items > a{
+  text-decoration: none;
+  font-family: "Poppins";
+  color: white;
+  font-weight: 500;
+  font-size: 1.5rem;
+  padding: 1rem;
+  width: 5rem;
+  height: 3rem;
+}
+
+.desktop-navigation {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .navbar {
+    justify-content: space-between;
+  }
+  .navigation-container {
+    display: none;
+  }
+
+  .menu-toggler {
+    display: none;
+  }
+
+  .desktop-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+
+  }
+
+  .navigation-list {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    gap: 1rem;
+  }
+  
+  .login-button, .register-button{
+    text-decoration: none;
+    font-family: "Poppins";
+    color: #9f3232;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+
+  .register-button {
+    background-color: #9f3232;
+    color: white;
+  }
+
+  .login-button:hover {
+    background-color: #ffecec;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .register-button:hover {
+    background-color: #a05757;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+}
+
+.login-button, .register-button{
+  text-decoration: none;
+  font-family: "Poppins";
+  color: #9f3232;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.register-button {
+  background-color: #9f3232;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #ffecec;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.register-button:hover {
+  background-color: #a05757;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
