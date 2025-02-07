@@ -4,6 +4,7 @@ import Menu from '../assets/menu.svg?react';
 import menuCloseIcon from '../assets/x.svg';
 import NavigationIcon from '../assets/map-pin.svg?react';
 import { useNavigate } from 'react-router-dom';
+import LocationDropdown from './LocationDropdown';
 
 const Navbar = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,42 +15,22 @@ const Navbar = (props) => {
     setIsMenuOpen((isMenuOpen) => !isMenuOpen);
   };
 
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          props.setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          console.log(props.location.latitude)
-          console.log(props.location.latitude)
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-        }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-    }
-  }, []);
-
   return (
       <>
       <nav className="navbar">
         <div className="horizontal-elements">
           <div className="logo-navbar" onClick={()=>navigate("/")}>foodi</div>
           <span style={{color: 'white'}}>|</span>
-          <div style={{position: 'relative'}}onMouseEnter={()=>setIsDropdownOpen(true)} onMouseLeave={()=>setIsDropdownOpen(false)}>
+          <div style={{position: 'relative'}} onMouseEnter={()=>setIsDropdownOpen(true)} onMouseLeave={()=>setIsDropdownOpen(false)}>
             <button className='location-button'>
-              <div className='location-container'>
-                <NavigationIcon style={{ marginRight: '0.3rem', width: '1.3rem', height: '1.3rem' }}/>
-                <span className='location-text'>
-                  {props.location.latitude} {props.location.longitude}
-                </span>
-              </div>
-            </button>
+              <NavigationIcon className='location-button' style={{ marginRight: '0.3rem', width: '1.3rem', height: '1.3rem' }}/>
+            </button>     
+            {isDropdownOpen && (
+              <LocationDropdown
+                setLocation={props.setLocation}
+                location={props.location}
+              />
+            )}
           </div>
         </div>
         {!isMenuOpen && (
@@ -66,11 +47,7 @@ const Navbar = (props) => {
             </li>
           </ul>
         </div>
-        {isDropdownOpen && (
-            <div className='dropdown-menu'>
-              <h1>KOBE</h1>
-            </div>  
-        )}
+        
       </nav>
       {isMenuOpen && (
         <div className="navigation-container">

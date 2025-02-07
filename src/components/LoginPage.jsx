@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '../styles/Login.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -39,8 +41,12 @@ const LoginPage = () => {
                   <p style={{textAlign: 'right', color: '#dc4848'}}>Forgot password?</p>
                 </div>
                 <button className="login-button-large" type="submit">Log in</button>
+                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px'}}>
+                  <p style={{color: '#333'}}>Don't have an account?</p>
+                  <button className='redirect-text' onClick={()=>navigate("/signup")}>Register</button>
+                </div>
             </form>
-            <p style={{paddingTop: '10px'}}>Don't have an account? <p style={{textAlign: 'right', color: '#dc4848'}}>Sign up</p></p>
+            
         </div>
     );
 };
