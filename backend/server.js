@@ -3,7 +3,7 @@ const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
-
+const axios = require('axios');
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
@@ -57,6 +57,29 @@ app.post('/api/find-restaurants', async (req, res) => {
   } catch (error) {
     console.error('Error in handling request:', error.message);
     res.status(500).json({ error: 'Error processing your request' });
+  }
+});
+
+app.get('/api/get-location-suggestions', async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.length < 3) {
+      return res.status(400).json({ error: "Query must be at least 3 characters" });
+  }
+
+  try {
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/place/autocomplete/json`, {
+          params: {
+              input: q,
+              key: process.env.GOOGLE_PLACES_API_KEY,
+              types: '(cities)',
+          }
+      });
+
+      res.json({ predictions: response.data.predictions.map(pred => pred.description) });
+  } catch (error) {
+      console.error("Google Places API error:", error.response?.data || error.message);
+      res.status(500).json({ error: "Failed to fetch suggestions" });
   }
 });
 

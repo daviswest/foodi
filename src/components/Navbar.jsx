@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Navbar.css';
 import Menu from '../assets/menu.svg?react';
 import menuCloseIcon from '../assets/x.svg';
-import NavigationIcon from '../assets/map-pin.svg?react';
 import { useNavigate } from 'react-router-dom';
 import LocationDropdown from './LocationDropdown';
 
 const Navbar = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate()
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const inputRef = useRef(null);
   const toggleMenu = () => {
     setIsMenuOpen((isMenuOpen) => !isMenuOpen);
   };
@@ -20,18 +18,10 @@ const Navbar = (props) => {
       <nav className="navbar">
         <div className="horizontal-elements">
           <div className="logo-navbar" onClick={()=>navigate("/")}>foodi</div>
-          <span style={{color: 'white'}}>|</span>
-          <div style={{position: 'relative'}} onMouseEnter={()=>setIsDropdownOpen(true)} onMouseLeave={()=>setIsDropdownOpen(false)}>
-            <button className='location-button'>
-              <NavigationIcon className='location-button' style={{ marginRight: '0.3rem', width: '1.3rem', height: '1.3rem' }}/>
-            </button>     
-            {isDropdownOpen && (
-              <LocationDropdown
-                setLocation={props.setLocation}
-                location={props.location}
-              />
-            )}
-          </div>
+          <LocationDropdown
+            setLocation={props.setLocation}
+            location={props.location}
+          />
         </div>
         {!isMenuOpen && (
           <button className="menu-toggler" onClick={toggleMenu}><Menu /></button>
