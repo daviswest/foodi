@@ -18,10 +18,7 @@ const Navbar = (props) => {
       <nav className="navbar">
         <div className="horizontal-elements">
           <div className="logo-navbar" onClick={()=>navigate("/")}>foodi</div>
-          <LocationDropdown
-            setLocation={props.setLocation}
-            location={props.location}
-          />
+          <LocationDropdown/>
         </div>
         {!isMenuOpen && (
           <button className="menu-toggler" onClick={toggleMenu}><Menu /></button>

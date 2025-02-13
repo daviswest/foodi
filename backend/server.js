@@ -16,7 +16,7 @@ const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey: process.env.DEEPSEEK_API_KEY,
 });
-
+/*
 app.post('/api/find-restaurants', async (req, res) => {
   const { description, location } = req.body;
 
@@ -59,7 +59,7 @@ app.post('/api/find-restaurants', async (req, res) => {
     res.status(500).json({ error: 'Error processing your request' });
   }
 });
-
+*/
 app.get('/api/get-location-suggestions', async (req, res) => {
   const { q } = req.query;
 
@@ -83,7 +83,7 @@ app.get('/api/get-location-suggestions', async (req, res) => {
   }
 });
 
-/*
+
 app.post('/api/find-restaurants', async (req, res) => {
   const { description, location } = req.body;
 
@@ -135,7 +135,7 @@ app.post('/api/find-restaurants', async (req, res) => {
     res.status(500).json({ error: 'Error processing your request' });
   }
 });
-*/
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, createContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Intro from './components/Intro';
@@ -24,12 +24,14 @@ const mockCoffeeShopData = [
   { id: nanoid(), image: 'https://fastly.4sqi.net/img/general/600x600/86226073_eHfUgSjNjOWVbq3sKPJH3Yv7W_HfDYkO5dYzW5FnVJU.jpg', description: 'Ludlow Coffee', stars: 4.8 },
   { id: nanoid(), image: 'https://fastly.4sqi.net/img/general/600x600/86226073_eHfUgSjNjOWVbq3sKPJH3Yv7W_HfDYkO5dYzW5FnVJU.jpg', description: 'Ludlow Coffee', stars: 4.8 },
   { id: nanoid(), image: 'https://fastly.4sqi.net/img/general/600x600/86226073_eHfUgSjNjOWVbq3sKPJH3Yv7W_HfDYkO5dYzW5FnVJU.jpg', description: 'Ludlow Coffee', stars: 4.8 },
-]
+];
+
+const LocationContext = createContext();
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [restaurantDescription, setRestaurantDescription] = useState("");
-  const [location, setLocation] = useState('New York, NY');
+  const [location, setLocation] = useState('Louisville, KY');
   const [isChatSubmit, setIsChatSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
@@ -61,58 +63,58 @@ function App() {
     fetchRestaurants(description, location);
   };
 
-  
-
   return (
-    <Router>
-    <div className="App">
-        <Navbar 
-          setLocation={setLocation}
-          location={location}
-        />
+    <LocationContext.Provider value={{location, setLocation}}>
+      <Router>
+      <div className="App">
+          <Navbar />
 
-        <Routes>
-        <Route path="/login" element={<LoginPage/>}/>
-        <Route path="/signup" element={<SignUpPage/>}/>
-        <Route 
-          path="/"
-          element={
-            <>
-        <Intro 
-          restaurantDescription={restaurantDescription}
-          setRestaurantDescription={setRestaurantDescription}
-          handleChatSubmit={handleChatSubmit}
-        />
-        {isChatSubmit ? (
-          isLoading ? (
-            <div className="loading-animation">Loading...</div>
+          <Routes>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/signup" element={<SignUpPage/>}/>
+          <Route 
+            path="/"
+            element={
+              <>
+          <Intro 
+            restaurantDescription={restaurantDescription}
+            setRestaurantDescription={setRestaurantDescription}
+            handleChatSubmit={handleChatSubmit}
+          />
+          {isChatSubmit ? (
+            isLoading ? (
+              <div className="loading-animation">Loading...</div>
+            ) : (
+              <ResultsCarousel
+                query={restaurantDescription}
+                location={location}
+                restaurants={restaurants}
+              />
+            )
           ) : (
-            <ResultsCarousel
-              query={restaurantDescription}
-              location={location}
-              restaurants={restaurants}
-            />
-          )
-        ) : (
-          <>
-            <Carousel 
-                coffeeShopData={mockCoffeeShopData}
-            />
-            <Carousel 
-                coffeeShopData={mockCoffeeShopData}
-            />
-            </>
-        )}
-        </>
-          }
-        />
-        <Route path="/about" element={<About />}/>
-        </Routes>
-        
-    </div>
-    <Footer />
-    </Router>
+            <>
+              <Carousel 
+                  title="Funky Coffee Shops in NYC"
+                  coffeeShopData={mockCoffeeShopData}
+              />
+              <Carousel 
+                  title="More Mock Data"
+                  coffeeShopData={mockCoffeeShopData}
+              />
+              </>
+          )}
+          </>
+            }
+          />
+          <Route path="/about" element={<About />}/>
+          </Routes>
+          
+      </div>
+      <Footer />
+      </Router>
+    </LocationContext.Provider>
   );
 }
 
 export default App;
+export { LocationContext };

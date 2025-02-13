@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState, forwardRef, useRef } from 'react';
+import React, { useCallback, useEffect, useState, forwardRef, useRef, useContext } from 'react';
 import debounce from 'lodash/debounce';
+import { LocationContext } from '../App';
 
 import '../styles/LocationDropdown.css'
 import NavigationIcon from '../assets/map-pin.svg?react';
-const LocationDropdown = ({ setLocation, location }) => {
+const LocationDropdown = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ const LocationDropdown = ({ setLocation, location }) => {
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
-
+  const {location, setLocation} = useContext(LocationContext)
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
       if (query.length < 3) return;
