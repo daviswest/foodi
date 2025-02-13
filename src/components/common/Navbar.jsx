@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../styles/Navbar.css';
-import Menu from '../assets/menu.svg?react';
-import menuCloseIcon from '../assets/x.svg';
+import '../../styles/Navbar.css';
+import Menu from '../../assets/menu.svg?react';
+import menuCloseIcon from '../../assets/x.svg';
 import { useNavigate } from 'react-router-dom';
-import LocationDropdown from './LocationDropdown';
+import LocationDropdown from '../LocationDropdown';
 
 const Navbar = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
