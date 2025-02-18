@@ -61,6 +61,34 @@ app.post('/api/find-restaurants', async (req, res) => {
   }
 });
 */
+app.get('/api/reverse-geocode', async (req, res) => {
+  const { lat, lng } = req.query;
+
+  if (!lat || !lng) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
+
+  try {
+    const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+      params: {
+        lat,
+        lon: lng,
+        format: 'json',
+      },
+    });
+
+    const data = response.data;
+    const city = data.address.city || data.address.town || data.address.village || '';
+    const state = data.address.state || '';
+
+    res.json({ city, state, formattedLocation: `${city}, ${state}` });
+  } catch (error) {
+    console.error('Error fetching location:', error);
+    res.status(500).json({ error: 'Error fetching location data' });
+  }
+});
+
+
 app.get('/api/get-location-suggestions', async (req, res) => {
   const { q } = req.query;
 
@@ -90,6 +118,7 @@ app.get('/api/get-location-suggestions', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch location suggestions" });
   }
 });
+
 
 
 app.post('/api/find-restaurants', async (req, res) => {
