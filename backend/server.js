@@ -60,28 +60,64 @@ app.post('/api/find-restaurants', async (req, res) => {
   }
 });
 */
+app.get('/api/reverse-geocode', async (req, res) => {
+  const { lat, lng } = req.query;
+
+  if (!lat || !lng) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
+
+  try {
+    const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+      params: {
+        lat,
+        lon: lng,
+        format: 'json',
+      },
+    });
+
+    const data = response.data;
+    const city = data.address.city || data.address.town || data.address.village || '';
+    const state = data.address.state || '';
+
+    res.json({ city, state, formattedLocation: `${city}, ${state}` });
+  } catch (error) {
+    console.error('Error fetching location:', error);
+    res.status(500).json({ error: 'Error fetching location data' });
+  }
+});
+
+
 app.get('/api/get-location-suggestions', async (req, res) => {
   const { q } = req.query;
 
   if (!q || q.length < 3) {
-      return res.status(400).json({ error: "Query must be at least 3 characters" });
+    return res.status(400).json({ error: "Query must be at least 3 characters" });
   }
 
   try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/place/autocomplete/json`, {
-          params: {
-              input: q,
-              key: process.env.GOOGLE_PLACES_API_KEY,
-              types: '(cities)',
-          }
-      });
+    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+      params: {
+        q: q,
+        format: 'json',
+        addressdetails: 1,
+        limit: 5, // Number of results
+      },
+    });
 
-      res.json({ predictions: response.data.predictions.map(pred => pred.description) });
+    const suggestions = response.data.map((place) => {
+      const city = place.address.city || place.address.town || place.address.village || place.address.county || '';
+      const state = place.address.state || '';
+      return city && state ? `${city}, ${state}` : city || state;
+    });
+
+    res.json({ predictions: suggestions });
   } catch (error) {
-      console.error("Google Places API error:", error.response?.data || error.message);
-      res.status(500).json({ error: "Failed to fetch suggestions" });
+    console.error("OpenStreetMap Nominatim API error:", error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to fetch location suggestions" });
   }
 });
+
 
 
 app.post('/api/find-restaurants', async (req, res) => {

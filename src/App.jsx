@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState, useEffect, createContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Navbar from './components/common/Navbar.jsx';
 import Intro from './components/Intro';
 import './styles/App.css';
 import Chat from './components/Chat.jsx'
@@ -11,9 +11,10 @@ import FrontPageCard from './components/FrontPageCard.jsx';
 import ResultsCarousel from './components/ResultsCarousel.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
-import Footer from './components/Footer.jsx';
+import Footer from './components/common/Footer.jsx';
 import About from './components/About.jsx';
 import './styles/FrontPageCard.css';
+import { LocationProvider } from './contexts/LocationContext';
 
 const mockCoffeeShopData = [
   { id: nanoid(), image: 'https://lh3.googleusercontent.com/p/AF1QipMmlrH3wzs7Xg5LZCEnSJdQKN_FdV72FQRriIdz=s680-w680-h510', description: 'Coffee Project New York | East Village', stars: 4.7 },
@@ -26,12 +27,9 @@ const mockCoffeeShopData = [
   { id: nanoid(), image: 'https://fastly.4sqi.net/img/general/600x600/86226073_eHfUgSjNjOWVbq3sKPJH3Yv7W_HfDYkO5dYzW5FnVJU.jpg', description: 'Ludlow Coffee', stars: 4.8 },
 ];
 
-const LocationContext = createContext();
-
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [restaurantDescription, setRestaurantDescription] = useState("");
-  const [location, setLocation] = useState('Louisville, KY');
   const [isChatSubmit, setIsChatSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
@@ -64,7 +62,7 @@ function App() {
   };
 
   return (
-    <LocationContext.Provider value={{location, setLocation}}>
+    <LocationProvider>
       <Router>
       <div className="App">
           <Navbar />
@@ -112,9 +110,8 @@ function App() {
       </div>
       <Footer />
       </Router>
-    </LocationContext.Provider>
+    </LocationProvider>
   );
 }
 
 export default App;
-export { LocationContext };
