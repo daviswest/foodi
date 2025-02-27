@@ -1,6 +1,6 @@
 import React from 'react'
 import { Star as StarIcon } from 'react-feather';
-const ResultsCard = (props) => {
+const ResultCard = (props) => {
   const fullStars = Math.floor(props.stars); // Full stars (e.g., 3 for 3.7)
   const partialStar = props.stars % 1; // Partial star (e.g., 0.7 for 3.7)
   const emptyStars = 5 - Math.ceil(props.stars); // Empty stars (total 5 - filled stars)
@@ -14,10 +14,10 @@ const ResultsCard = (props) => {
           borderRadius: '1rem 1rem 0rem 0rem',
           objectFit: 'cover',
         }}
-        alt={`Image of ${props.description}`}
+        alt={`Image of ${props.name}`}
       />
       <div className='card-body'>
-        <h3>{props.description}</h3>
+        <h3>{props.name}</h3>
         <div className='stars'>
             {/* Full Stars */}
             {Array.from({ length: fullStars }).map((_, index) => (
@@ -39,9 +39,10 @@ const ResultsCard = (props) => {
               <StarIcon key={`empty-${index}`} color="#ffffff" size={16} />
             ))}
         </div>
+        <h3>{props.description}</h3>
       </div>
     </div>
   )
 }
 
-export default ResultsCard
+export default ResultCard

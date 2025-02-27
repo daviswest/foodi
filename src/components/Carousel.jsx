@@ -1,40 +1,29 @@
 import React, { useRef } from 'react';
-import FrontPageCard from './FrontPageCard';
 import '../styles/App.css';
-import '../styles/FrontPageCard.css';
 
-const Carousel = ({ coffeeShopData }) => {
+const Carousel = ({ data, title, CardComponent }) => {
   const carouselRef = useRef(null);
 
-  const handleLeftClick = () => {
-    carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' }); // Scroll left by 200px
-  };
-
-  const handleRightClick = () => {
-    carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' }); // Scroll right by 200px
+  const scroll = (direction) => {
+    carouselRef.current.scrollBy({ left: direction * 300, behavior: 'smooth' });
   };
 
   return (
     <div className="carousel-container">
-      <h1 className="intro-heading-2">Funky Coffee Shops in New York, NY</h1>
-      <div className="horizontal-carousel-container" ref={carouselRef}>
-        {coffeeShopData.map((coffeeShop) => (
-          <FrontPageCard
-            key={coffeeShop.id}
-            image={coffeeShop.image}
-            description={coffeeShop.description}
-            stars={coffeeShop.stars}
+      {title && <h1 className="intro-heading">{title}</h1>}
+      <div className="carousel" ref={carouselRef}>
+        {data.map((item, index) => (
+          <CardComponent
+            key={item.id || index}
+            image={item.image}
+            name={item.name}
+            description={item.description}
+            stars={item.stars || 5}
           />
         ))}
       </div>
-
-      <button className="arrow-button arrow-left" onClick={handleLeftClick}>
-        &#8249;
-      </button>
-
-      <button className="arrow-button arrow-right" onClick={handleRightClick}>
-        &#8250;
-      </button>
+      <button className="arrow arrow-left" onClick={() => scroll(-1)}>&#8249;</button>
+      <button className="arrow arrow-right" onClick={() => scroll(1)}>&#8250;</button>
     </div>
   );
 };
