@@ -1,0 +1,13 @@
+.results-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 1rem 3rem;
+}
+
+.results-heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  padding-bottom: 2rem;
+}

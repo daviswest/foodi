@@ -1,80 +1,66 @@
-.horizontal-carousel-container {
+.carousel-container {
+  max-width: 90%;
+  margin: auto;
+  padding: 1rem 3rem;
+  position: relative;
+}
+
+.carousel {
   display: flex;
   overflow-x: auto;
   gap: 1rem;
-  justify-content: flex-start;
-  position: relative;
   height: 25rem;
-  width: 100%; /* Ensures the scroll bar spans the entire width */
+  width: 100%;
   padding: 1rem 0;
-  margin: 0; /* No need for manual centering here */
   scrollbar-width: none;
 }
 
-.arrow-button {
+.arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: transparent;
+  background: transparent;
   border: none;
   cursor: pointer;
-  z-index: 1;
   font-size: 2.5rem;
   color: #dc4848;
-  padding: 0.75rem
+  padding: 0.75rem;
 }
 
-.arrow-left {
-  left: 1rem;
-}
+.arrow-left { left: 1rem; }
+.arrow-right { right: 1rem; }
 
-.arrow-right {
-  right: 1rem;
-}
-
-.carousel-container {
-  max-width: 90%; /* Restrict the max width of the content */
-  padding: 1rem 3rem;
-  margin: 0 auto; /* Center the content */
-  position: relative;
-}
-
-/* Each Card */
-.horizontal-carousel-container .card {
+/* Card Styles */
+.carousel .card {
   flex: 0 0 auto;
   width: 15rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  text-overflow: ellipsis;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s;
   scroll-snap-align: start;
 }
 
-.horizontal-carousel-container .card:hover {
+.carousel .card:hover {
   transform: scale(1.05);
   cursor: pointer;
 }
 
-/* Card Content */
 .card img {
   width: 100%;
-  object-fit:cover;
+  object-fit: cover;
 }
 
 .card .card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: flex-start;
   padding: 0.5rem 1rem;
+  text-align: left;
 }
 
 .card .card-body h3 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-size: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .card .card-body p {
@@ -82,49 +68,25 @@
   color: #555;
 }
 
-.stars {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0;
-}
-
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .horizontal-carousel-container {
+  .carousel {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: fit-content;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    padding: 1rem 1rem;
-    overflow-x: unset; /* Disable horizontal scroll */
-    scroll-snap-type: none; /* Disable scroll snapping */
+    overflow-x: hidden;
     height: auto;
   }
 
-  .horizontal-carousel-container .card {
-    width: auto; /* Allow cards to use full width of the grid */
+  .carousel .card {
+    width: auto;
     height: 20rem;
   }
 
-  .carousel-container {
-    padding: 0;
-    margin: 0;
-    position: relative;
-    max-width: 100%;
-  }
-
-  .arrow-button {
-    display: none;
-  }
+  .arrow { display: none; }
 }
 
 @media (max-width: 480px) {
-  .horizontal-carousel-container .card {
-    width: 150px; /* Even smaller cards on very small screens */
-  }
-  .horizontal-carousel-container {
-    gap: 0.5rem;
-    padding: 0.25rem;
-  }
+  .carousel .card { width: 150px; }
+  .carousel { gap: 0.5rem; padding: 0.25rem; }
 }
-
