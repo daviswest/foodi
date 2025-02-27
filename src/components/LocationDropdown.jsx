@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import useLocation from '../hooks/useLocation';
-import { fetchLocationSuggestions } from '../api/locationApi';
+import { fetchLocationSuggestions, getUserLocation } from '../api/locationService'; // Updated import
 import '../styles/LocationDropdown.css';
 import NavigationIcon from '../assets/map-pin.svg?react';
-import { getUserLocation } from '../api/locationApi';
 
 const LocationDropdown = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +16,7 @@ const LocationDropdown = () => {
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
-  const { location, setLocation } = useLocation();
+  const { location, setLocation, loading: locationLoading } = useLocation();
 
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
@@ -80,7 +79,7 @@ const LocationDropdown = () => {
   };
 
   const handleUseCurrentLocation = async () => {
-    console.log("use current location in dropdown clicked")
+    console.log("use current location in dropdown clicked");
     const userLocation = await getUserLocation();
     setLocation(userLocation);
   };
@@ -89,7 +88,7 @@ const LocationDropdown = () => {
     <div style={{ position: 'relative', left: '0.2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
       <button ref={buttonRef} className='location-button' onClick={() => setIsDropdownOpen((prev) => !prev)}>
         <NavigationIcon style={{ width: '1.3rem', height: '1.3rem' }} />
-        <span>{location}</span>
+        <span>{locationLoading ? '' : location}</span>
       </button>
 
       {isDropdownOpen && (
@@ -108,7 +107,7 @@ const LocationDropdown = () => {
               <li className="suggestion-item" onClick={handleUseCurrentLocation}>
                 Use Current Location
               </li>
-              {loading ? (
+              {location ? (
                 <li className="suggestion-item">Loading...</li>
               ) : error ? (
                 <li className="suggestion-item error">{error}</li>
