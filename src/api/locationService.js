@@ -1,19 +1,15 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'http://localhost:5001/api'; // Replace with your actual API URL
 
 export const fetchLocationSuggestions = async (query) => {
   if (query.length < 3) return [];
 
   try {
-    const response = await fetch(`${API_URL}/get-location-suggestions?q=${query}`);
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
-    return data.predictions || [];
+    const response = await axios.get(`${API_URL}/get-location-suggestions`, {
+      params: { q: query },
+    });
+    return response.data.predictions || [];
   } catch (error) {
     console.error('Error fetching location suggestions:', error);
     return [];
@@ -26,22 +22,18 @@ export const getCurrentPosition = async () => {
     return null;
   }
 
-  try {
-    return await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        }),
-        (error) => {
-          console.error('Geolocation error:', error);
-          reject(null);
-        }
-      );
-    });
-  } catch {
-    return null;
-  }
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      }),
+      (error) => {
+        console.error('Geolocation error:', error);
+        reject(null);
+      }
+    );
+  });
 };
 
 export const reverseGeocode = async (latitude, longitude) => {
@@ -49,7 +41,6 @@ export const reverseGeocode = async (latitude, longitude) => {
     const response = await axios.get(`${API_URL}/reverse-geocode`, {
       params: { lat: latitude, lng: longitude },
     });
-
     return response.data.formattedLocation || 'Location unavailable';
   } catch (error) {
     console.error('Error fetching reverse geocode:', error);
@@ -61,9 +52,8 @@ export const getUserLocation = async () => {
   try {
     const position = await getCurrentPosition();
     if (!position) return 'Location unavailable';
-
     return await reverseGeocode(position.latitude, position.longitude);
-  } catch {
+  } catch (error) {
     return 'Location unavailable';
   }
 };
