@@ -4,10 +4,12 @@ import Menu from '../../assets/menu.svg?react';
 import menuCloseIcon from '../../assets/x.svg';
 import { useNavigate } from 'react-router-dom';
 import LocationDropdown from '../LocationDropdown';
+import useAuth from '../../hooks/useAuth';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, handleLogout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -29,12 +31,23 @@ const Navbar = () => {
 
         <div className="desktop-navigation">
           <ul className="navigation-list">
-            <li className="navigation-list-items">
-              <button className="login-button" onClick={() => navigate("/login")}>Log in</button>
-            </li>
-            <li className="navigation-list-items">
-              <button className="register-button" onClick={() => navigate("/signup")}>Sign Up</button>
-            </li>
+            {user ? (
+              <>
+                <li className="navigation-list-items">Welcome, {user.name}!</li>
+                <li className="navigation-list-items">
+                  <button className="login-button" onClick={handleLogout}>Logout</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="navigation-list-items">
+                  <button className="login-button" onClick={() => navigate("/login")}>Log in</button>
+                </li>
+                <li className="navigation-list-items">
+                  <button className="register-button" onClick={() => navigate("/signup")}>Sign Up</button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>
