@@ -1,23 +1,45 @@
 import React, { useState } from 'react';
+import useAuth from "../hooks/useAuth"
 import '../styles/Login.css';
 import { useNavigate } from 'react-router-dom';
+
 const SignUpPage = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { handleRegister, error } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("sign up submitted", { email, password });
-    }
+        const success = await handleRegister(name, email, password);
+        if (success) navigate("/");
+    };
 
     return (
         <div className="signup-page">
             <div className="signup-container">
                 <div className="logo-dark">foodi</div>
                 <h2 className="signup-heading">Register</h2>
+                {error && (
+                    <ul style={{ color: "red" }}>
+                        {error.map((msg, index) => (
+                            <li key={index}>{msg}</li>
+                        ))}
+                    </ul>
+                )}
+
             </div>
             <form className="signup-form" onSubmit={handleSubmit}>
+                <div className="label-and-input">
+                    <label>Name</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
                 <div className="label-and-input">
                     <label>Email</label>
                     <input
@@ -32,16 +54,7 @@ const SignUpPage = () => {
                     <input
                         type="password"
                         value={password}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="label-and-input">
-                    <label>Confirm Password</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>

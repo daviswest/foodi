@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import useAuth from "../hooks/useAuth.jsx";
 import '../styles/Login.css';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { handleLogin, error } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("login submitted", { email, password });
-    }
+        const success = await handleLogin(email, password);
+        if (success) navigate("/");
+    };
 
     return (
         <div className="login-page">
             <div className="login-container">
                 <div className="logo-dark">foodi</div>
                 <h2 className="login-heading">Log in</h2>
+                <div className={`error-container ${error ? 'show' : ''}`}>
+                    {error && <p style={{ color: "white" }}>{error}</p>}
+                </div>
             </div>
             <form className="login-form" onSubmit={handleSubmit}>
                 <div className="label-and-input">

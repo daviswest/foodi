@@ -10,8 +10,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
   text-align: center;
+  gap: 1rem;
+}
+
+.error-container {
+  color: white;
+  height: 1rem;
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  opacity: 1;
+  transition: display opacity 0.3s ease-in-out;
+}
+
+.error-container.open {
+  background-color: #f10909;
+  opacity: 0;
 }
 
 .logo-dark {
