@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api'; // Replace with your actual API URL
+const API_URL = 'http://localhost:5001/api/locations';
 
 export const fetchLocationSuggestions = async (query) => {
   if (query.length < 3) return [];
