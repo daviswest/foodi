@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       await login(email, password);
       await checkUserSession();
       setError(null);
+      return true;
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     }
