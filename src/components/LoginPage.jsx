@@ -44,7 +44,7 @@ const LoginPage = () => {
                     />
                 </div>
                 <div className="label-and-input">
-                  <p style={{textAlign: 'right', color: '#dc4848'}}>Forgot password?</p>
+                  <p className='redirect-text' style={{textAlign: 'right', color: '#dc4848'}} onClick={()=>navigate("/forgot-password")}>Forgot password?</p>
                 </div>
                 <button className="login-button-large" type="submit">Log in</button>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px'}}>
