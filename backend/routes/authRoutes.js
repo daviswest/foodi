@@ -8,6 +8,11 @@ const {
   getAuthenticatedUser,
 } = require("../controllers/authController");
 
+const {
+  forgotPassword,
+  resetPassword,
+} = require("../controllers/passwordController");
+
 const router = express.Router();
 
 // Registration Validation Middleware
@@ -43,5 +48,7 @@ router.post("/login", loginUser);
 router.get("/refresh", refreshToken);
 router.post("/logout", logoutUser);
 router.get("/me", getAuthenticatedUser);
+router.post("/reset-password", resetPassword);
+router.post("/forgot-password", forgotPassword);
 
 module.exports = router;

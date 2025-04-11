@@ -52,3 +52,20 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+
+export const requestPasswordReset = async (email) => {
+  try {
+    await axios.post(`${API_URL}/forgot-password`, { email });
+  } catch (error) {
+    throw error.response?.data?.message || "Could not send reset email.";
+  }
+};
+
+export const resetPassword = async (token, newPassword) => {
+  try {
+    await axios.post(`${API_URL}/reset-password`, { token, newPassword });
+  }
+  catch (error) {
+    throw error.response?.data?.message || "Password reset failed.";
+  }
+};
