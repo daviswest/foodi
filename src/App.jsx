@@ -8,6 +8,8 @@ import Carousel from './components/Carousel.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
 import ResultsPage from './components/ResultsPage.jsx';
+import ForgotPasswordPage from './components/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './components/ResetPasswordPage.jsx';
 import Footer from './components/common/Footer.jsx';
 import About from './components/About.jsx';
 import './styles/FrontPageCard.css';
@@ -34,6 +36,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/results" element={<ResultsPage/>} />
         <Route path="/" element={
           <>
