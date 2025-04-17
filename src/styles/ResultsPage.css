@@ -2,12 +2,32 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin: 1rem 3rem;
+  margin: 1rem 1rem;
+  min-width: 95%;
+  max-width: 30rem;
 }
 
-.results-heading {
+.results-heading { 
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #dc4848;
   padding-bottom: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .results-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 1rem auto;
+    min-width: 80%;
+    max-width: 30rem;
+  }
+  
+  .results-heading { 
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #dc4848;
+    padding-bottom: 2rem;
+  }
 }

@@ -4,6 +4,7 @@
   justify-content: center;
   align-items: center;
   padding: 3rem;
+  flex-grow: 1;
 }
 
 .login-container, .signup-container {
@@ -95,7 +96,6 @@ input:focus {
   color: #9f3232;
 }
 
-/* Button style */
 .login-button-large, .signup-button-large {
   background-color: #dc4848;
   color: white;
@@ -114,7 +114,6 @@ input:focus {
   background-color: #9f3232;
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   .login-container, .signup-container {
       padding: 1rem;
@@ -125,7 +124,7 @@ input:focus {
       font-size: 1.5rem;
   }
 
-  .intro-heading {
+  .login-heading {
       font-size: 1.2rem;
   }
 
@@ -153,7 +152,7 @@ input:focus {
       width: 40%;
   }
 
-  .intro-heading {
+  .login-heading {
       font-size: 1.8rem;
   }
 
