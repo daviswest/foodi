@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import useLocation from '../hooks/useLocation';
-import { fetchLocationSuggestions, getUserLocation } from '../api/locationService'; // Updated import
+import { fetchLocationSuggestions, getUserLocation } from '../api/locationService';
 import '../styles/LocationDropdown.css';
 import NavigationIcon from '../assets/map-pin.svg?react';
 
@@ -37,7 +37,7 @@ const LocationDropdown = () => {
   );
 
   useEffect(() => {
-    if (searchTerm.length >= 3) {
+    if (searchTerm.length >= 0) {
       fetchSuggestions(searchTerm);
     } else {
       setSuggestions([]);
@@ -45,14 +45,14 @@ const LocationDropdown = () => {
   }, [searchTerm, fetchSuggestions]);
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (
         dropdownRef.current && !dropdownRef.current.contains(event.target) &&
         buttonRef.current && !buttonRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false);
       }
-    }
+    };
 
     if (isDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -79,41 +79,48 @@ const LocationDropdown = () => {
   };
 
   const handleUseCurrentLocation = async () => {
-    console.log("use current location in dropdown clicked");
     const userLocation = await getUserLocation();
     setLocation(userLocation);
+    setIsDropdownOpen(false);
   };
 
   return (
-    <div style={{ position: 'relative', left: '0.2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      <button ref={buttonRef} className='location-button' onClick={() => setIsDropdownOpen((prev) => !prev)}>
+    <div className="profile-dropdown" style={{borderLeft: '2px solid white', paddingLeft: '1rem'}}>
+      <button ref={buttonRef} className="profile-button" onClick={() => setIsDropdownOpen(prev => !prev)} style={{display: 'flex', color: 'white', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '500'}}>
         <NavigationIcon style={{ width: '1.3rem', height: '1.3rem' }} />
         <span>{locationLoading ? '' : location}</span>
       </button>
 
       {isDropdownOpen && (
-        <div ref={dropdownRef} className={`dropdown-menu ${isDropdownOpen ? 'open' : 'close'}`}>
+        <div ref={dropdownRef} className="profile-menu left">
           <input
-            className="location-input"
+            ref={inputRef}
             type="text"
+            className="location-input"
             placeholder="city, state, or zip"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            ref={inputRef}
+            style={{
+              width: '100%',
+              padding: '0.5rem 1rem',
+              border: 'none',
+              borderBottom: '1px solid #ddd',
+              outline: 'none',
+              fontFamily: '"Poppins", sans-serif',
+              fontSize: '0.9rem'
+            }}
           />
 
           {isFocused && (
-            <ul className='suggestions-list'>
-              <li className="suggestion-item" onClick={handleUseCurrentLocation}>
+            <ul className="suggestions-list" style={{ listStyleType: 'none', margin: 0, padding: 0 }}>
+              <li className="profile-menu-item" onClick={handleUseCurrentLocation}>
                 Use Current Location
               </li>
-              {location ? (
-                <li className="suggestion-item">Loading...</li>
-              ) : error ? (
-                <li className="suggestion-item error">{error}</li>
+              {error ? (
+                <li className="profile-menu-item error">{error}</li>
               ) : (
                 suggestions.map((suggestion, index) => (
-                  <li key={index} className="suggestion-item" onClick={() => handleSuggestionClick(suggestion)}>
+                  <li key={index} className="profile-menu-item" onClick={() => handleSuggestionClick(suggestion)}>
                     {suggestion}
                   </li>
                 ))
