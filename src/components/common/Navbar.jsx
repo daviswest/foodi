@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import '../../styles/Navbar.css';
-import Menu from '../../assets/menu.svg?react';
-import menuCloseIcon from '../../assets/x.svg';
-import { useNavigate } from 'react-router-dom';
-import LocationDropdown from '../LocationDropdown';
-import useAuth from '../../hooks/useAuth';
+import React, { useState } from "react";
+import "../../styles/Navbar.css";
+import Menu from "../../assets/menu.svg?react";
+import { X as XIcon } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import LocationDropdown from "../LocationDropdown";
+import ProfileDropdown from "../ProfileDropdown";
+import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,56 +16,86 @@ const Navbar = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  const handleNavigate = (path) => {
+    navigate(path);
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <nav className="navbar">
         <div className="horizontal-elements">
-          <div className="logo-navbar" onClick={() => navigate("/")}>foodi</div>
+          <div className="logo-navbar" onClick={() => handleNavigate("/")}>
+            foodi
+          </div>
+          <div className="menu-toggler desktop-only">
           <LocationDropdown />
+          </div>
         </div>
 
-        {!isMenuOpen && (
+        <div className="horizontal-elements">
+          {user ? (
+            <div className="menu-toggler desktop-only">
+            <ProfileDropdown user={user} onLogout={handleLogout} />
+            </div>
+          ) : (
+            <div className="auth-buttons desktop-only">
+              <button className="login-button" onClick={() => navigate("/login")}>
+                Log in
+              </button>
+              <button className="register-button" onClick={() => navigate("/signup")}>
+                Sign Up
+              </button>
+            </div>
+          )}
           <button className="menu-toggler" onClick={toggleMenu}>
-            <Menu />
+            {!isMenuOpen ? <Menu /> : <XIcon size={20}/>}
           </button>
-        )}
-
-        <div className="desktop-navigation">
-          <ul className="navigation-list">
-            {user ? (
-              <>
-                <li className="navigation-list-items">Welcome, {user.name}!</li>
-                <li className="navigation-list-items">
-                  <button className="login-button" onClick={handleLogout}>Logout</button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="navigation-list-items">
-                  <button className="login-button" onClick={() => navigate("/login")}>Log in</button>
-                </li>
-                <li className="navigation-list-items">
-                  <button className="register-button" onClick={() => navigate("/signup")}>Sign Up</button>
-                </li>
-              </>
-            )}
-          </ul>
         </div>
       </nav>
 
-      {isMenuOpen && (
-        <div className="navigation-container">
-          <button className="menu-close" onClick={toggleMenu}>
-            <img src={menuCloseIcon} alt="Menu Close" />
-          </button>
-          <ul className='navigation-list'>
-            <li className='navigation-list-items' onClick={() => navigate("/")}>Home</li>
-            <li className='navigation-list-items' onClick={() => navigate("/about")}>About</li>
-            <li className='navigation-list-items' onClick={() => navigate("/services")}>Services</li>
-            <li className='navigation-list-items' onClick={() => navigate("/contact")}>Contact</li>
-          </ul>
+      {/* Mobile Menu */}
+      {isMenuOpen && <div className="mobile-menu-backdrop" onClick={toggleMenu}></div>}
+
+      <div className={`navigation-container ${isMenuOpen ? "open" : ""}`}>
+        <button className="close-button" onClick={toggleMenu}>
+          <XIcon size={20}/>
+        </button>
+
+        <ul className="navigation-list primary-links">
+          <li className="navigation-list-items" onClick={() => handleNavigate("/")}>
+            Home
+          </li>
+          {user ? (
+            <>
+          <li className="navigation-list-items" onClick={() => handleNavigate("/favorites")}>
+            View Favorites
+          </li>
+          </>
+          ) : (
+            <li className="navigation-list-items" onClick={() => handleNavigate("/about")}>
+              About
+            </li>
+          )}
+        </ul>
+
+        <div className="auth-section">
+          {user ? (
+              <div className="auth-button login" onClick={handleLogout}>
+                Logout
+              </div>
+          ) : (
+            <>
+              <button className="auth-button login" onClick={() => handleNavigate("/login")}>
+                Log in
+              </button>
+              <button className="auth-button signup" onClick={() => handleNavigate("/signup")}>
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };

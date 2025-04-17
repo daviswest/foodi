@@ -1,4 +1,3 @@
-// contexts/LocationContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import { getUserLocation } from '../api/locationService';
 
@@ -6,7 +5,7 @@ export const LocationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
   const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(null);
 
   const updateLocation = (newLocation) => {
       console.log("Setting location to:", newLocation);

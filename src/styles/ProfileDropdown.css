@@ -1,0 +1,50 @@
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.profile-button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+
+}
+
+.profile-button:focus {
+  outline: none;
+}
+
+.profile-menu.left {
+  left: 0;
+  width: 250px;
+}
+
+.profile-menu {
+  position: absolute;
+  margin-top: 0.5rem;
+  top: 110%;
+  right: 0;
+  background-color: #ebdfdf;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  z-index: 1000;
+  cursor: auto;
+}
+
+.profile-menu-item {
+  padding: 0.75rem 1rem;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  transition: background-color 0.3s;
+  border-radius: 0.5rem;
+}
+
+.profile-menu-item:hover {
+  cursor: pointer;
+  background-color: #f2a9a9;
+}
