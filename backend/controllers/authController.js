@@ -1,8 +1,8 @@
+const { getUserById, createUser, getUserByEmail } = require("../models/UserModel");
+const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
-const { getUserById, createUser, getUserByEmail } = require("../models/UserModel");
-const { validationResult } = require("express-validator");
 
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -40,13 +40,11 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  
   try {
     const user = await getUserByEmail(email);
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-
     const token = generateToken(user.id, "1h");
 
     res.cookie("jwt", token, {
@@ -66,7 +64,6 @@ const loginUser = async (req, res) => {
 const refreshToken = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) return res.status(401).json({ message: "Unauthorized" });
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const newToken = generateToken(decoded.id, "1h");
@@ -75,9 +72,8 @@ const refreshToken = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600000,
     });
-
     res.json({ message: "Token refreshed" });
   } catch (error) {
     console.error(error);
@@ -91,20 +87,9 @@ const logoutUser = (req, res) => {
 };
 
 const getAuthenticatedUser = async (req, res) => {
-  const token = req.cookies.jwt;
-  console.log("cookies received: ", req.cookies);
-  if (!token) {
-    console.log("No token");
-    return res.status(401).json({ message: "Not authenticated" });
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("token decoded: ", decoded);
-    const user = await getUserById(decoded.id);
-    console.log("user found: ", user);
+    const user = await getUserById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
-
     res.json({ id: user.id, name: user.name, email: user.email });
   } catch (error) {
     console.error(error);
@@ -112,4 +97,10 @@ const getAuthenticatedUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, refreshToken, logoutUser, getAuthenticatedUser };
+module.exports = { 
+  registerUser, 
+  loginUser, 
+  refreshToken, 
+  logoutUser, 
+  getAuthenticatedUser 
+};

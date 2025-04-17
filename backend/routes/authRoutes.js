@@ -13,9 +13,10 @@ const {
   resetPassword,
 } = require("../controllers/passwordController");
 
+const authMiddleware = require("../middlewares/authMiddleware");
+
 const router = express.Router();
 
-// Registration Validation Middleware
 const registerValidation = [
   check("name")
     .trim()
@@ -42,12 +43,11 @@ const registerValidation = [
     .withMessage("Password must contain at least one special character"),
 ];
 
-// Auth Routes
 router.post("/register", registerValidation, registerUser);
 router.post("/login", loginUser);
 router.get("/refresh", refreshToken);
 router.post("/logout", logoutUser);
-router.get("/me", getAuthenticatedUser);
+router.get("/me", authMiddleware, getAuthenticatedUser);
 router.post("/reset-password", resetPassword);
 router.post("/forgot-password", forgotPassword);
 
