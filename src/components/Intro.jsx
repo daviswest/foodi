@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowRight from '../assets/arrow-right.svg?react';
+import { placeholders } from '../data/placeholders'
 
-const placeholders = [
-  "Cozy Italian place for date night",
-  "Funky coffee shops for studying",
-  "Romantic date night for anniversary",
-  "Trendy sushi spots in the city",
-  "New boba tea spot with friends",
-];
 
 const Intro = ({ restaurantDescription, setRestaurantDescription, location }) => {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
+
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -28,28 +24,65 @@ const Intro = ({ restaurantDescription, setRestaurantDescription, location }) =>
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentPlaceholder((prevIndex) => (prevIndex + 1) % placeholders.length);
+      setCurrentPlaceholder((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % placeholders.length;
+        console.log('currentPlaceholder:', nextIndex);
+        return nextIndex;
+      });
     }, 4000);
+  
     return () => clearInterval(intervalId);
   }, []);
+  
+  function handleFocus() {
+    setIsFocused(true);
+  }
 
+  function handleBlur() {
+    if (restaurantDescription === '') {
+      setIsFocused(false);
+    }
+  }
   return (
-    <div className="intro-container">
+    <>
       <h1 className="intro-heading">Find the perfect restaurant with Foodi.</h1>
-      <form className="intro-form-input" onSubmit={handleSubmit}>
-        <input
-          className="intro-form-text"
-          type="text"
-          placeholder={placeholders[currentPlaceholder]}
-          value={restaurantDescription}
-          onChange={handleInputChange}
-        />
-        <button className="intro-form-submit" type="submit">
-          <ArrowRight className="search-arrow" />
-        </button>
-      </form>
+      <div className="intro-container">
+      <form className="intro-form" onSubmit={handleSubmit}>
+  <div className="input-wrapper">
+    {!isFocused && restaurantDescription.length === 0 && (
+    <div className="placeholder-carousel">
+      <div
+        className="carousel-track"
+        style={{ transform: `translateY(-${currentPlaceholder * 3.5}rem)` }}
+      >
+        {placeholders.map((text, index) => (
+          <div className="carousel-item" key={index}>
+            {text}
+          </div>
+        ))}
+      </div>
     </div>
+    )}
+
+    <input
+      className="intro-form-text"
+      type="text"
+      value={restaurantDescription}
+      onChange={handleInputChange}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    />
+
+    <button className="intro-form-submit" type="submit">
+      <ArrowRight className="search-arrow" />
+    </button>
+  </div>
+</form>
+
+    </div>
+    </>
   );
+  
 };
 
 export default Intro;
