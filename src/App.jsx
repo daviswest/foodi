@@ -12,6 +12,7 @@ import ForgotPasswordPage from './components/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './components/ResetPasswordPage.jsx';
 import Footer from './components/common/Footer.jsx';
 import About from './components/About.jsx';
+import FavoritesPage from './components/FavoritesPage.jsx';
 import './styles/FrontPageCard.css';
 import useLocation from './hooks/useLocation.jsx';
 import { nanoid } from 'nanoid';
@@ -39,18 +40,15 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/results" element={<ResultsPage/>} />
+        <Route path="/favorites" element={<FavoritesPage/>} />
         <Route path="/" element={
-          <>
+
             <Intro 
               restaurantDescription={restaurantDescription}
               setRestaurantDescription={setRestaurantDescription}
               location={location}
             />
-            <>
-            <Carousel title="Funky Coffee Shops in New York, NY" data={mockCoffeeShopData} CardComponent={Card} />
-            <Carousel title="Funky Coffee Shops in New York, NY" data={mockCoffeeShopData} CardComponent={Card} />
-            </>
-          </>
+
         } />
       </Routes>
       <Footer />

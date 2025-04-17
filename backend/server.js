@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const authRoutes = require("./routes/authRoutes");
 const locationRoutes = require("./routes/locationRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
+const favoritesRoutes = require("./routes/favoritesRoutes");
 
 const app = express();
 const port = 5001;
@@ -37,5 +38,6 @@ app.use("/api/auth/reset-password", passwordLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/favorites", favoritesRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
