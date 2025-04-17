@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import '../styles/App.css';
 
-const Carousel = ({ data, title, CardComponent }) => {
+const Carousel = ({ data, CardComponent }) => {
   const carouselRef = useRef(null);
 
   const scroll = (direction) => {
@@ -10,20 +10,22 @@ const Carousel = ({ data, title, CardComponent }) => {
 
   return (
     <div className="carousel-container">
-      {title && <h1 className="intro-heading">{title}</h1>}
       <div className="carousel" ref={carouselRef}>
-        {data.map((item, index) => (
-          <CardComponent
-            key={item.id || index}
-            image={item.image}
-            name={item.name}
-            description={item.description}
-            stars={item.stars || 5}
-          />
-        ))}
-      </div>
       <button className="arrow arrow-left" onClick={() => scroll(-1)}>&#8249;</button>
+      {data.map((item, index) => (
+  <CardComponent
+    key={item.place_id || index}
+    place_id={item.place_id}
+    name={item.name}
+    description={item.editorial_summary?.overview || "No description available."}
+    stars={item.rating || 5}
+    image={item.photo || 'default-image.png'}
+    website={item.website}
+  />
+))}
       <button className="arrow arrow-right" onClick={() => scroll(1)}>&#8250;</button>
+
+      </div>
     </div>
   );
 };
