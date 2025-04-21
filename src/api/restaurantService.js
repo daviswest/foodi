@@ -2,16 +2,18 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5001/api';
 
-export const fetchRestaurantRecommendations = async (description, location) => {
+export const fetchRestaurantRecommendations = async (description, location, page = 1, pageSize = 5) => {
   try {
     const response = await axios.post(`${API_URL}/restaurants/find-restaurants`, {
       description,
       location,
+      page,
+      pageSize
     });
-    return response.data.restaurants || [];
+    return response.data;
   } catch (error) {
     console.error('Error fetching restaurant recommendations:', error);
-    return [];
+    return { restaurants: [], totalResults: 0, hasMore: false };
   }
 };
 

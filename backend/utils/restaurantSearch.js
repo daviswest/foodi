@@ -163,12 +163,18 @@ async function fetchPhotoForRestaurant(placeId) {
   }
 }
 
-async function getRestaurantSuggestions(description, location, context = {}) {
+async function getRestaurantSuggestions(description, location, context = {}, page = 1, pageSize = 5) {
   const queryEmbedding = await getQueryEmbedding(description, context);
-  const matches = await queryPinecone(queryEmbedding, 15);
+  const matches = await queryPinecone(queryEmbedding, 20);
 
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const totalResults = matches.length;
+
+  const pageMatches = matches.slice(startIndex, endIndex);
   const restaurants = [];
-  for (const match of matches) {
+
+  for (const match of pageMatches) {
     const restaurant = await getRestaurantFromDynamo(match.id);
     if (restaurant) {
       if (!restaurant.photo) {
@@ -188,9 +194,11 @@ async function getRestaurantSuggestions(description, location, context = {}) {
     }
   }
 
-  return restaurants
-    .sort((a, b) => b.finalScore - a.finalScore)
-    .slice(0, 5);
+  return {
+    restaurants,
+    totalResults,
+    hasMore: endIndex < totalResults
+  };
 }
 
 module.exports = {
