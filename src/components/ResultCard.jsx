@@ -3,16 +3,16 @@ import { Star as StarIcon } from "react-feather";
 import { addFavorite, removeFavorite } from "../api/favoriteService";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import { useFavorites } from '../contexts/FavoritesContext';
-import "../styles/FrontPageCard.css";
+import "../styles/ResultsPage.css";
 
-const ResultCard = ({ place_id, ...props }) => {
+const ResultCard = ({ place_id, name, photo, rating, description, ...props }) => {
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [localFavorite, setLocalFavorite] = useState(isFavorite(place_id));
   const [showModal, setShowModal] = useState(false);
 
-  const fullStars = Math.floor(props.stars);
-  const partialStar = props.stars % 1;
-  const emptyStars = 5 - Math.ceil(props.stars);
+  const fullStars = Math.floor(rating);
+  const partialStar = rating % 1;
+  const emptyStars = 5 - Math.ceil(rating);
 
   const handleCardClick = () => {
     setShowModal(true);
@@ -25,7 +25,7 @@ const ResultCard = ({ place_id, ...props }) => {
         await removeFavorite(place_id);
         setLocalFavorite(false);
       } else {
-        await addFavorite({ place_id, name, photo: image });
+        await addFavorite({ place_id, name, photo, rating, description, ...props });
         setLocalFavorite(true);
       }
     } catch (err) {
@@ -42,35 +42,21 @@ const ResultCard = ({ place_id, ...props }) => {
       <div
         className="card"
         onClick={handleCardClick}
-        style={{ cursor: "pointer" }}
       >
         <img
-          src={props.image}
-          alt={`Image of ${props.name}`}
-          style={{
-            height: "10rem",
-            borderRadius: "1rem 1rem 0 0",
-            objectFit: "cover",
-          }}
+          src={photo}
+          alt={`Image of ${name}`}
         />
         <div className="card-body">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3>{props.name}</h3>
+          <div className="card-header">
+            <h3>{name}</h3>
             <div
               className="favorite-icon"
               onClick={handleFavoriteClick}
-              style={{ cursor: "pointer" }}
             >
               <StarIcon
                 color={localFavorite ? "#dc4848" : "#aaa"}
                 style={{ fill: localFavorite ? "#dc4848" : "#aaa" }}
-                onClick={handleFavoriteClick}
               />
             </div>
           </div>
@@ -98,11 +84,11 @@ const ResultCard = ({ place_id, ...props }) => {
               <StarIcon key={`empty-${index}`} color="#ffffff" size={16} />
             ))}
           </div>
-          <p>{props.description}</p>
+          <p>{description}</p>
         </div>
       </div>
       {showModal && (
-        <RestaurantDetailsModal restaurant={{place_id, ...props}} onClose={handleCloseModal} />
+        <RestaurantDetailsModal restaurant={{place_id, name, photo, rating, description, ...props}} onClose={handleCloseModal} />
       )}
     </>
   );

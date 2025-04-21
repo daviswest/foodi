@@ -1,7 +1,6 @@
 // ResultsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Carousel from './Carousel';
 import ResultCard from './ResultCard';
 import SkeletonCard from './SkeletonCard';
 import '../styles/ResultsPage.css';
@@ -39,14 +38,17 @@ const ResultsPage = () => {
     <div className="results-page">
       <h2 className="results-heading">Results for "{query}" in {userLocation}</h2>
       {isLoading ? (
-        // Render a carousel containing a set of skeleton cards as placeholders.
-        <div className="carousel">
+        <div className="cards-container">
           {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
         </div>
       ) : restaurants.length > 0 ? (
-        <Carousel title="Top Restaurants" data={restaurants} CardComponent={ResultCard} />
+        <div className="cards-container">
+          {restaurants.map((restaurant) => (
+            <ResultCard key={restaurant.place_id} {...restaurant} />
+          ))}
+        </div>
       ) : (
         <p>No results found.</p>
       )}

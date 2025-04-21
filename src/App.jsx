@@ -4,7 +4,6 @@ import Navbar from './components/common/Navbar.jsx';
 import Card from './components/Card';
 import Intro from './components/Intro';
 import './styles/App.css';
-import Carousel from './components/Carousel.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
 import ResultsPage from './components/ResultsPage.jsx';
@@ -13,7 +12,7 @@ import ResetPasswordPage from './components/ResetPasswordPage.jsx';
 import Footer from './components/common/Footer.jsx';
 import About from './components/About.jsx';
 import FavoritesPage from './components/FavoritesPage.jsx';
-import './styles/FrontPageCard.css';
+import './styles/ResultsPage.css';
 import useLocation from './hooks/useLocation.jsx';
 import { nanoid } from 'nanoid';
 
@@ -31,28 +30,28 @@ function App() {
   const { location } = useLocation();
 
   return (
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/results" element={<ResultsPage/>} />
-        <Route path="/favorites" element={<FavoritesPage/>} />
-        <Route path="/" element={
-
-            <Intro 
-              restaurantDescription={restaurantDescription}
-              setRestaurantDescription={setRestaurantDescription}
-              location={location}
-            />
-
-        } />
-      </Routes>
-      <Footer />
-    </div>
+      <div className="App" role="application" aria-label="Foodi application">
+        <Navbar />
+        <main id="main-content" role="main">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/results" element={<ResultsPage/>} />
+            <Route path="/favorites" element={<FavoritesPage/>} />
+            <Route path="/" element={
+              <Intro 
+                restaurantDescription={restaurantDescription}
+                setRestaurantDescription={setRestaurantDescription}
+                location={location}
+              />
+            } />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
   );
 }
 

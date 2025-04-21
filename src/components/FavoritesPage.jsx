@@ -1,5 +1,4 @@
 import React from 'react';
-import Carousel from './Carousel';
 import ResultCard from './ResultCard';
 import SkeletonCard from './SkeletonCard';
 import '../styles/ResultsPage.css';
@@ -12,13 +11,17 @@ const FavoritesPage = () => {
     <div className="results-page">
       <h2 className="results-heading">Favorites</h2>
       {isLoading ? (
-        <div className="carousel">
+        <div className="cards-container">
           {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
         </div>
       ) : favorites.length > 0 ? (
-        <Carousel title="Top Restaurants" data={favorites} CardComponent={ResultCard} />
+        <div className="cards-container">
+          {favorites.map((favorite) => (
+            <ResultCard key={favorite.place_id} {...favorite} />
+          ))}
+        </div>
       ) : (
         <p>No results found.</p>
       )}
