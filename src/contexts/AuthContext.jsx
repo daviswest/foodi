@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { getCurrentUser, login, logout, refreshToken, register } from "../api/authService";
 
 export const AuthContext = createContext();
@@ -48,9 +48,21 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, error }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    error,
+    handleLogin,
+    handleRegister,
+    handleLogout,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

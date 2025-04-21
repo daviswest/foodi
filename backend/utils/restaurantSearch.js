@@ -20,13 +20,93 @@ async function initPipeline() {
   }
 }
 
-async function getQueryEmbedding(query) {
+async function getQueryEmbedding(query, context = {}) {
   await initPipeline();
-  const output = await pipe(query, { pooling: 'mean', normalize: true });
+
+  const enrichedQuery = `${query} 
+    ${context.priceLevel ? `with price level ${context.priceLevel}` : ''} 
+    ${context.types ? `for ${context.types.join(' or ')}` : ''}`;
+  
+  const output = await pipe(enrichedQuery, { pooling: 'mean', normalize: true });
   return Array.from(output.data);
 }
 
-async function queryPinecone(embedding, topK = 5) {
+function calculateTemporalScore(restaurant, timeOfDay) {
+  if (!restaurant.opening_hours?.periods) return 1.0;
+  
+  const hour = new Date().getHours();
+  const day = new Date().getDay();
+  let score = 1.0;
+
+  const isOpen = restaurant.opening_hours.periods.some(period => {
+    const openDay = parseInt(period.open.day);
+    const closeDay = parseInt(period.close.day);
+    const openHour = parseInt(period.open.time.substring(0, 2));
+    const closeHour = parseInt(period.close.time.substring(0, 2));
+    
+    return day >= openDay && day <= closeDay && 
+           hour >= openHour && hour < closeHour;
+  });
+
+  if (timeOfDay === 'morning' && restaurant.types?.includes('breakfast')) {
+    score *= 1.5;
+  } else if (timeOfDay === 'evening' && restaurant.types?.includes('dinner')) {
+    score *= 1.5;
+  }
+
+  score *= isOpen ? 1.2 : 0.8;
+  return score;
+}
+
+function calculateContextScore(restaurant, context) {
+  let score = 1.0;
+
+  if (context.priceLevel && restaurant.price_level) {
+    const priceDiff = Math.abs(context.priceLevel - restaurant.price_level);
+    score *= 1 - (priceDiff * 0.2);
+  }
+
+  if (context.types && restaurant.types) {
+    const matchingTypes = context.types.filter(type => 
+      restaurant.types.includes(type)
+    );
+    score *= 1 + (matchingTypes.length * 0.1);
+  }
+
+  if (restaurant.rating) {
+    score *= restaurant.rating / 5.0;
+  }
+
+  if (restaurant.user_ratings_total) {
+    const popularityScore = Math.min(1, restaurant.user_ratings_total / 1000);
+    score *= 0.7 + (popularityScore * 0.3);
+  }
+
+  return score;
+}
+
+async function calculateRestaurantScore(restaurant, queryEmbedding, context) {
+  const vectorScore = restaurant.vectorScore || 1.0;
+  const temporalScore = calculateTemporalScore(restaurant, context.timeOfDay);
+  const contextScore = calculateContextScore(restaurant, context);
+
+  const finalScore = 
+    (vectorScore * 0.5) + 
+    (temporalScore * 0.25) + 
+    (contextScore * 0.25);
+
+  return {
+    ...restaurant,
+    finalScore,
+    scoringBreakdown: {
+      vectorScore,
+      temporalScore,
+      contextScore
+    }
+  };
+}
+
+async function queryPinecone(embedding, topK = 10) {
   const url = `${PINECONE_BASE_URL}/query`;
   const body = {
     vector: embedding,
@@ -35,7 +115,6 @@ async function queryPinecone(embedding, topK = 5) {
     includeMetadata: true,
   };
 
-  console.log("Querying Pinecone with body:", body);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -45,15 +124,11 @@ async function queryPinecone(embedding, topK = 5) {
     body: JSON.stringify(body),
   });
 
-  const text = await response.text();
-  console.log("Raw Pinecone response:", text);
-  
-  try {
-    const data = JSON.parse(text);
-    return data.matches;
-  } catch (err) {
-    throw new Error("Failed to parse Pinecone response as JSON: " + text);
-  }
+  const data = await response.json();
+  return data.matches.map(match => ({
+    ...match,
+    vectorScore: match.score
+  }));
 }
 
 async function getRestaurantFromDynamo(placeId) {
@@ -62,6 +137,7 @@ async function getRestaurantFromDynamo(placeId) {
     Key: { place_id: placeId },
   };
   const result = await dynamoDB.send(new GetCommand(params));
+  console.log('Restaurant data from DynamoDB:', JSON.stringify(result.Item, null, 2));
   return result.Item;
 }
 
@@ -87,10 +163,9 @@ async function fetchPhotoForRestaurant(placeId) {
   }
 }
 
-async function getRestaurantSuggestions(description, location) {
-  const queryText = `${description}`;
-  const embedding = await getQueryEmbedding(queryText);
-  const matches = await queryPinecone(embedding, 5);
+async function getRestaurantSuggestions(description, location, context = {}) {
+  const queryEmbedding = await getQueryEmbedding(description, context);
+  const matches = await queryPinecone(queryEmbedding, 15);
 
   const restaurants = [];
   for (const match of matches) {
@@ -99,12 +174,27 @@ async function getRestaurantSuggestions(description, location) {
       if (!restaurant.photo) {
         restaurant.photo = await fetchPhotoForRestaurant(restaurant.place_id);
       }
-      restaurants.push(restaurant);
+
+      const scoredRestaurant = await calculateRestaurantScore(
+        restaurant,
+        queryEmbedding,
+        context
+      );
+
+      restaurants.push({
+        ...scoredRestaurant,
+        description: restaurant.editorial_summary?.overview || "No description available"
+      });
     }
   }
-  return restaurants;
+
+  return restaurants
+    .sort((a, b) => b.finalScore - a.finalScore)
+    .slice(0, 5);
 }
 
 module.exports = {
-  getRestaurantSuggestions, getRestaurantFromDynamo, fetchPhotoForRestaurant
+  getRestaurantSuggestions,
+  getRestaurantFromDynamo,
+  fetchPhotoForRestaurant
 };

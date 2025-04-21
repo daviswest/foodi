@@ -4,14 +4,20 @@ import {
   addFavorite as addFavoriteToServer,
   removeFavorite as removeFavoriteFromServer,
 } from "../api/favoriteService";
+import useAuth from "../hooks/useAuth";
 
 const FavoritesContext = createContext(null);
 
 export function FavoritesProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     async function fetchFavorites() {
+      if (!user) {
+        setFavorites([]);
+        return;
+      }
       try {
         const { favorites: favs } = await fetchFavoritesFromServer();
         console.log(favs);
@@ -21,7 +27,7 @@ export function FavoritesProvider({ children }) {
       }
     }
     fetchFavorites();
-  }, []);
+  }, [user]);
 
   async function addFavorite(restaurant) {
     try {
