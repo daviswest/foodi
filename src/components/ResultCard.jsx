@@ -9,6 +9,7 @@ const ResultCard = ({ place_id, name, photo, rating, description, ...props }) =>
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [localFavorite, setLocalFavorite] = useState(isFavorite(place_id));
   const [showModal, setShowModal] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const fullStars = Math.floor(rating);
   const partialStar = rating % 1;
@@ -37,16 +38,29 @@ const ResultCard = ({ place_id, name, photo, rating, description, ...props }) =>
     setShowModal(false);
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <>
       <div
         className="card"
         onClick={handleCardClick}
       >
-        <img
-          src={photo}
-          alt={`Image of ${name}`}
-        />
+        <div className="image-container">
+          {!imageError && photo ? (
+            <img
+              src={photo}
+              alt=""
+              onError={handleImageError}
+            />
+          ) : (
+            <div className="placeholder-image">
+              <span className="placeholder-text">{name}</span>
+            </div>
+          )}
+        </div>
         <div className="card-body">
           <div className="card-header">
             <h3>{name}</h3>
