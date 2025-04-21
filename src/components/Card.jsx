@@ -6,8 +6,14 @@ const Card = ({ image, description, stars }) => {
   const partialStar = stars % 1;
   const emptyStars = 5 - Math.ceil(stars);
 
+  const starRatingText = `${stars} out of 5 stars`;
+
   return (
-    <div className='card'>
+    <article 
+      className='card'
+      role="article"
+      aria-label={`Restaurant: ${description}`}
+    >
       <img
         src={image}
         style={{
@@ -16,12 +22,23 @@ const Card = ({ image, description, stars }) => {
           objectFit: 'cover',
         }}
         alt={`Image of ${description}`}
+        aria-label={`Image of ${description}`}
       />
       <div className='card-body'>
         <h3>{description}</h3>
-        <div className='stars'>
+        <div 
+          className='stars'
+          role="img"
+          aria-label={starRatingText}
+        >
             {Array.from({ length: fullStars }).map((_, index) => (
-              <StarIcon key={`full-${index}`} color="#dc4848" size={16} style={{ fill: "#dc4848" }} />
+              <StarIcon 
+                key={`full-${index}`} 
+                color="#dc4848" 
+                size={16} 
+                style={{ fill: "#dc4848" }}
+                aria-hidden="true"
+              />
             ))}
             {partialStar > 0 && (
               <StarIcon
@@ -29,14 +46,20 @@ const Card = ({ image, description, stars }) => {
                 color="#dc4848"
                 size={16}
                 style={{ fill: "#dc4848", clipPath: `inset(0 ${100 - partialStar * 100}% 0 0)` }}
+                aria-hidden="true"
               />
             )}
             {Array.from({ length: emptyStars }).map((_, index) => (
-              <StarIcon key={`empty-${index}`} color="#ffffff" size={16} />
+              <StarIcon 
+                key={`empty-${index}`} 
+                color="#ffffff" 
+                size={16}
+                aria-hidden="true"
+              />
             ))}
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
