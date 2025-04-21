@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./routes/authRoutes");
 const locationRoutes = require("./routes/locationRoutes");
@@ -19,22 +18,6 @@ app.use(cors({
   credentials: true,
 }));
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: "Too many attempts. Try again later.",
-});
-
-const passwordLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: "Too many password reset attempts. Try again later.",
-});
-
-app.use("/api/auth/login", authLimiter);
-app.use("/api/auth/register", authLimiter);
-app.use("/api/auth/forgot-password", passwordLimiter);
-app.use("/api/auth/reset-password", passwordLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/restaurants", restaurantRoutes);

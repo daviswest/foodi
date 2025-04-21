@@ -14,6 +14,7 @@ const {
 } = require("../controllers/passwordController");
 
 const authMiddleware = require("../middlewares/authMiddleware");
+const { authLimiter, passwordLimiter } = require("../middlewares/rateLimiter");
 
 const router = express.Router();
 
@@ -43,12 +44,12 @@ const registerValidation = [
     .withMessage("Password must contain at least one special character"),
 ];
 
-router.post("/register", registerValidation, registerUser);
-router.post("/login", loginUser);
+router.post("/login", authLimiter, loginUser);
+router.post("/register", authLimiter, registerValidation, registerUser);
+router.post("/forgot-password", passwordLimiter, forgotPassword);
+router.post("/reset-password", passwordLimiter, resetPassword);
 router.get("/refresh", refreshToken);
 router.post("/logout", logoutUser);
 router.get("/me", authMiddleware, getAuthenticatedUser);
-router.post("/reset-password", resetPassword);
-router.post("/forgot-password", forgotPassword);
 
 module.exports = router;
