@@ -31,7 +31,12 @@ const registerUser = async (req, res) => {
       maxAge: 3600000,
     });
 
-    res.status(201).json({ id: user.id, name: user.name, email: user.email });
+    res.status(201).json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      token
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -54,7 +59,12 @@ const loginUser = async (req, res) => {
       maxAge: 3600000,
     });
 
-    res.json({ id: user.id, name: user.name, email: user.email });
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      token
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
