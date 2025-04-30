@@ -1,2 +1,2 @@
 # foodi
-A web app that uses the DeepSeek API to provide relevant restaurants based on a user's natural language description of a restaurant's 'vibe'
+A restaurant discovery web app that encodes both user queries and restaurant profiles into transformer-based embeddings and uses Pinecone's approximate nearest-neighbor search to deliver semantically similar personalized recommendations.
