@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'https://reliable-toffee-506b30.netlify.app/',
+  origin: 'https://reliable-toffee-506b30.netlify.app',
   credentials: true,
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type, Authorization',
