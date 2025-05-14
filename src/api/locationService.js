@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api/locations';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchLocationSuggestions = async (query) => {
   if (query.length < 3) return [];
 
   try {
-    const response = await axios.get(`${API_URL}/get-location-suggestions`, {
+    const response = await axios.get(`${API_URL}/locations/get-location-suggestions`, {
       params: { q: query },
     });
     return response.data.predictions || [];
@@ -38,7 +38,7 @@ export const getCurrentPosition = async () => {
 
 export const reverseGeocode = async (latitude, longitude) => {
   try {
-    const response = await axios.get(`${API_URL}/reverse-geocode`, {
+    const response = await axios.get(`${API_URL}/locations/reverse-geocode`, {
       params: { lat: latitude, lng: longitude },
     });
     return response.data.formattedLocation || 'Location unavailable';
