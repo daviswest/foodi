@@ -21,7 +21,7 @@ const forgotPassword = async (req, res) => {
       { expiresIn: "15m" }
     );
 
-    const resetLink = `${process.env.REACT_APP_API_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     await sendResetEmail(user.email, resetLink);
     res.status(200).json({ message: "Password reset link sent." });
