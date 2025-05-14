@@ -9,6 +9,8 @@ export const fetchRestaurantRecommendations = async (description, location, page
       location,
       page,
       pageSize
+    }, {
+      withCredentials: true
     });
     return response.data;
   } catch (error) {
@@ -21,6 +23,7 @@ export const fetchRestaurantDetails = async (place_id) => {
   try {
     const response = await axios.get(`${API_URL}/restaurants/details`, {
       params: { place_id },
+      withCredentials: true
     });
     return response.data;
   } catch (error) {
