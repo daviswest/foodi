@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/authRoutes");
@@ -8,17 +9,12 @@ const favoritesRoutes = require("./routes/favoritesRoutes");
 
 const app = express();
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://reliable-toffee-506b30.netlify.app");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
-app.options("*", (req, res) => {
-  res.sendStatus(204);
-});
+app.use(cors({
+  origin: "https://reliable-toffee-506b30.netlify.app",
+  methods: ["GET","HEAD","PUT","PATCH","POST","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"],
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,10 +24,12 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
-app.get("/healthz", (req, res) => {
-  return res.sendStatus(204);
+app.get("/healthz", (_req, res) => res.sendStatus(204));
+
+app.use((err, _req, res, _next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({ error: err.message });
 });
 
-app.listen(process.env.PORT || 10000, () => {
-  console.log("Server running");
-});
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
