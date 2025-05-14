@@ -18,6 +18,10 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+app.get("/api/ping", (_req, res) => {
+  console.log("/api/ping hit");
+  return res.json({ pong: true });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/locations", locationRoutes);
