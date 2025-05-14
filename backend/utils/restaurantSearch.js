@@ -4,8 +4,6 @@ const { GetCommand } = require("@aws-sdk/lib-dynamodb");
 require('dotenv').config();
 
 const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
-const PINECONE_INDEX_NAME = process.env.PINECONE_INDEX_NAME || 'east-village-restaurants';
-const PINECONE_ENV = process.env.PINECONE_ENV || 'us-east-1';
 const PINECONE_BASE_URL = process.env.PINECONE_BASE_URL || 'https://east-village-restaurants-5b8bhxh.svc.aped-4627-b74a.pinecone.io';
 
 let pipe = null;

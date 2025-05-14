@@ -8,7 +8,6 @@ const restaurantRoutes = require("./routes/restaurantRoutes");
 const favoritesRoutes = require("./routes/favoritesRoutes");
 
 const app = express();
-const port = 5001;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,4 +22,4 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(process.env.PORT, () => console.log(`Server running`));
